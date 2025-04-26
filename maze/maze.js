@@ -14,3 +14,12 @@ function solveMaze() {
     ctx.lineTo(110, 110); // Temporary example: replace with solver logic
     ctx.stroke();
 }
+
+function showSettings() {
+    const settings = document.getElementById('settings');
+    if (settings.style.display === 'none') {
+        settings.style.display = 'block';
+    } else {
+        settings.style.display = 'none';
+    }
+}
