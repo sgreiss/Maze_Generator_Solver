@@ -2,10 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maze Generator</title>
+    <title>Maze Generator & Solver</title>
+    <style>
+        body {
+            margin: 0;
+            background: #111;
+            color: #eee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        canvas {
+            border: 2px solid #eee;
+            background: #222;
+            margin-top: 20px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background: #444;
+            color: #eee;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #666;
+        }
+    </style>
 </head>
 <body>
-    
+    <h1>Maze Generator & Solver</h1>
+
+    <div>
+        <button onclick="generateMaze()">Generate Maze</button>
+        <button onclick="solveMaze()">Solve Maze</button>
+    </div>
+
+    <canvas id="mazeCanvas" width="900" height="700"></canvas>
+
+    <script src="maze/maze.js"></script>
+
 </body>
 </html>
