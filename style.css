@@ -11,8 +11,8 @@ body {
 }
 
 canvas {
-  border: 2px solid #eee;
-  background: #222;
+  border: 2px solid #222;
+  background: #ccc;
   margin-top: 20px;
 }
 
