@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css" />
     <title>Maze Generator & Solver</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Maze Generator & Solver</h1>
 
     <div>
-        <button onclick="generateMaze()">Generate Maze</button>
-        <button onclick="solveMaze()">Solve Maze</button>
-        <button onclick="showSettings()">Settings</button>
+      <button onclick="generateMaze()">Generate Maze</button>
+      <button onclick="solveMaze()">Solve Maze</button>
+      <button onclick="showSettings()">Settings</button>
     </div>
 
     <div class="root">
-        <canvas id="mazeCanvas" width="900" height="700"></canvas>
+      <canvas id="mazeCanvas" width="900" height="700"></canvas>
 
-        <div class="settings" id="settings" style="display: none">
-            <label for="rows">Rows:</label>
-            <input type="number" id="rows" value="20" min="5" max="50"><br>
-            <label for="cols">Cols:</label>
-            <input type="number" id="cols" value="20" min="5" max="50"><br>
-            <button onclick="applySettings()">Apply</button>
-        </div>
+      <div class="settings" id="settings" style="display: none">
+        <label for="width">Width:</label>
+        <input type="number" id="width" value="20" min="5" max="50" /><br />
+        <label for="height">Cols:</label>
+        <input type="number" id="height" value="20" min="5" max="50" /><br />
+        <button onclick="applySettings()">Apply</button>
+      </div>
     </div>
 
     <script src="maze/maze.js"></script>
-</body>
+  </body>
 </html>
