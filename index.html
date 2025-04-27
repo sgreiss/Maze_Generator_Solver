@@ -18,11 +18,8 @@
       <canvas id="mazeCanvas" width="900" height="700"></canvas>
 
       <div class="settings" id="settings" style="display: none">
-        <label for="width">Width:</label>
-        <input type="number" id="width" value="90" min="50" max="120" /><br />
-
-        <label for="height">Height:</label>
-        <input type="number" id="height" value="70" min="50" max="120" /><br />
+        <label for="cellSize">Cell Size:</label>
+        <input type="range" id="cellSize" value="25" min="10" max="50" class="slider"/><br />
 
         <button onclick="applySettings()">Apply</button>
       </div>
