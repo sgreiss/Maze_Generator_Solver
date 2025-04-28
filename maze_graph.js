@@ -24,20 +24,34 @@ class MazeGraph {
         }
     }
 
-    /*
-            0  1  2  3
-        0   .--.--.--.
-            |        |
-        1   .--.--.  .
-            |        |
-        2   .  .--.--.
-            |        |
-        3   .--.--.--.
-    */
+    generateMaze() {
+        const start =
+            this.graph[Math.floor(Math.random() * this.height)][
+                Math.floor(Math.random() * this.width)
+            ];
+        const stack = [start];
+        const visited = new Set([start]);
+        while (stack.length > 0) {
+            const current = stack.pop();
+            const neighbors = current.neighbors.filter(
+                (neighbor) => !visited.has(neighbor)
+            );
+            if (neighbors.length > 0) {
+                stack.push(current);
+                const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+                current.addEdge(next);
+                next.addEdge(current);
+                visited.add(next);
+                stack.push(next);
+            }
+        }
+    }
 
     toGraphString() {
         let str =
-            "\t" + Array.from({ length: this.width }, (_, x) => x).join("  ") + "\n"; // 0  1  2  3  ...
+            "\t" +
+            Array.from({ length: this.width }, (_, x) => x).join("  ") +
+            "\n"; // 0  1  2  3  ...
         str += Array.from(
             { length: this.height },
             (_, row) =>
@@ -107,6 +121,10 @@ class MazeNode {
 
     getEdges() {
         return this.edges;
+    }
+
+    hasNoEdges() {
+        return this.edges.length === 0;
     }
 
     toString() {

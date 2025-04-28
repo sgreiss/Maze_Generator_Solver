@@ -70,7 +70,7 @@ class Maze {
 const maze = new Maze(10, 8);
 
 const graph = new MazeGraph(10, 8);
-console.log(graph.toPTString());
+graph.generateMaze();
 console.log(graph.toGraphString());
 
 /*
