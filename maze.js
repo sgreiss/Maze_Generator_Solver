@@ -69,6 +69,8 @@ class Maze {
 
 const maze = new Maze(25, 20);
 
+const graph = new MazeGraph(25, 20);
+
 /*
 ctx.strokeStyle = "#50dc5a";
     ctx.lineWidth = 3;
