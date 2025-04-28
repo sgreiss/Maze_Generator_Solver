@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="style.css" />
-    <title>Maze Generator & Solver</title>
-  </head>
+    <head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" href="style.css" />
+        <title>Maze Generator & Solver</title>
+    </head>
 
-  <body>
-    <h1>Maze Generator & Solver</h1>
+    <body>
+        <h1>Maze Generator & Solver</h1>
 
-    <div>
-      <button onclick="generateMaze()">Generate Maze</button>
-      <button onclick="solveMaze()">Solve Maze</button>
-      <button onclick="showSettings()">Settings</button>
-    </div>
+        <div>
+            <button onclick="generateMaze()">Generate Maze</button>
+            <button onclick="solveMaze()">Solve Maze</button>
+            <button onclick="showSettings()">Settings</button>
+        </div>
 
-    <div class="root">
-      <canvas id="mazeCanvas" width="900" height="700"></canvas>
+        <div class="root">
+            <canvas id="mazeCanvas" width="900" height="700"></canvas>
 
-      <div class="settings" id="settings" style="display: none">
-        <label for="cellSize">Cell Size:</label>
-        <input
-          type="range"
-          id="cellSize"
-          value="25"
-          min="10"
-          max="50"
-          class="slider"
-        /><br />
+            <div class="settings" id="settings" style="display: none">
+                <label for="cellSize">Cell Size:</label>
+                <input
+                    type="range"
+                    id="cellSize"
+                    value="25"
+                    min="10"
+                    max="50"
+                    class="slider"
+                /><br />
 
-        <button style="border: none" onclick="applySettings()">Apply</button>
-      </div>
-    </div>
+                <button style="border: none" onclick="applySettings()">
+                    Apply
+                </button>
+            </div>
+        </div>
 
-    <script type="module" src="maze.js"></script>
-  </body>
+        <script type="module" src="maze.js"></script>
+    </body>
 </html>
