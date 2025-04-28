@@ -44,6 +44,8 @@ class Maze {
         this.width = width;
         this.height = height;
         this.graph = new MazeGraph(width, height);
+        this.path = [];
+        this.tracingPath = false;
         this.cellSize = [0, 0]; // [width, height]
         this.init(width, height);
     }
@@ -77,7 +79,45 @@ class Maze {
         this.graph.generateMaze();
         console.log(this.graph.toGraphString());
 
+        this.drawMaze();
+    }
+
+    clicked(x, y) {
+        const cellX = Math.floor(x / this.cellSize[0]);
+        const cellY = Math.floor(y / this.cellSize[1]);
+        const node = this.graph.graph[cellY][cellX];
+        if (node.isEnd) {
+            if (this.path.length == 0) {
+                if (this.tracingPath) {
+                    this.tracingPath = false;
+                } else {
+                    this.tracingPath = true;
+                }
+            }
+        } else {
+            if (this.tracingPath) {
+                while (this.tracingPath) {
+                    this.drawMaze();
+                    ctx.strokeStyle = "#50dc5a";
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.moveTo(
+                        node.x * this.cellSize[0] + this.cellSize[0] / 2,
+                        node.y * this.cellSize[1] + this.cellSize[1] / 2
+                    );
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                }
+            } else {
+                this.tracingPath = false;
+            }
+        }
+    }
+
+    drawMaze() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.strokeStyle = "#222";
+
         for (let row = 0; row < this.height; row++) {
             for (let col = 0; col < this.width; col++) {
                 if (this.graph.graph[row][col].isEnd) {
@@ -129,14 +169,15 @@ class Maze {
             }
         }
     }
-    draw() {}
 }
 
 // resizeCanvas();
 // window.addEventListener("resize", resizeCanvas);
 
 const maze = new Maze(10, 8);
-
+$("#mazeCanvas").click(function (event) {
+    maze.clicked(event.offsetX, event.offsetY);
+});
 /*
 ctx.strokeStyle = "#50dc5a";
     ctx.lineWidth = 3;
