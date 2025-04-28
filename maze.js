@@ -1,6 +1,11 @@
 const canvas = document.getElementById("mazeCanvas");
 const ctx = canvas.getContext("2d");
 
+function resizeCanvas() {
+    canvas.width = window.innerWidth * 0.6;
+    canvas.height = window.innerHeight * 0.6;
+}
+
 const WIDTH_HEIGHT_RATIO = 9 / 7;
 
 function initMaze(width, height) {
@@ -29,7 +34,7 @@ function showSettings() {
 
 function applySettings() {
     const cellCount = parseInt(document.getElementById("cellCount").value);
-    const width = cellSize;
+    const width = cellCount;
     const height = Math.ceil(cellCount / WIDTH_HEIGHT_RATIO);
     initMaze(width, height);
 }
@@ -75,6 +80,25 @@ class Maze {
         ctx.strokeStyle = "#222";
         for (let row = 0; row < this.height; row++) {
             for (let col = 0; col < this.width; col++) {
+                if (this.graph.graph[row][col].isEnd) {
+                    ctx.fillStyle = "#50dc5a";
+                    ctx.fillRect(
+                        col * this.cellSize[0] + this.cellSize[0] * 0.25,
+                        row * this.cellSize[1] + this.cellSize[1] * 0.25,
+                        this.cellSize[0] * 0.5,
+                        this.cellSize[1] * 0.5
+                    );
+                    ctx.strokeStyle = "#41b446";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(
+                        col * this.cellSize[0] + this.cellSize[0] * 0.25,
+                        row * this.cellSize[1] + this.cellSize[1] * 0.25,
+                        this.cellSize[0] * 0.5,
+                        this.cellSize[1] * 0.5
+                    );
+                    ctx.strokeStyle = "#222";
+                    ctx.lineWidth = 1;
+                }
                 const node = this.graph.graph[row][col];
                 for (const neighbor of node.neighbors) {
                     if (!node.hasEdge(neighbor)) {
@@ -107,6 +131,9 @@ class Maze {
     }
     draw() {}
 }
+
+// resizeCanvas();
+// window.addEventListener("resize", resizeCanvas);
 
 const maze = new Maze(10, 8);
 

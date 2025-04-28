@@ -31,14 +31,14 @@ class MazeGraph {
 
     setEnds() {
         const firstArea = Math.floor(Math.random() * 4); // 0: top, 1: left, 2: right, 3: bottom
-        const secondArea = Math.floor(Math.random() * 4);
+        let secondArea = Math.floor(Math.random() * 4);
         if (secondArea == firstArea) {
             secondArea++;
             if (secondArea == 4) {
                 secondArea = 0;
             }
         }
-        let first, second; // [x, y]
+        let first = [0, 0], second = [0, 0]; // [x, y]
         if (firstArea == 0 || firstArea == 3) {
             first = [
                 Math.floor(Math.random() * this.width),
@@ -63,20 +63,58 @@ class MazeGraph {
                           (Math.random() * this.width) / 2
                       ));
             }
-            second = [
-                Math.floor(Math.random() * this.width),
-                secondArea == 0 ? 0 : this.height - 1,
-            ];
+            second[1] = 0;
+        } else if (secondArea == 1) {
+            if (
+                (firstArea == 0 || firstArea == 3) &&
+                first[0] < this.width / 2
+            ) {
+                firstArea == 0
+                    ? (second[1] =
+                          Math.floor((Math.random() * this.height) / 2) +
+                          this.height / 2)
+                    : (second[1] = Math.floor(
+                          (Math.random() * this.height) / 2
+                      ));
+            }
+            second[0] = 0;
+        } else if (secondArea == 2) {
+            if (
+                (firstArea == 0 || firstArea == 3) &&
+                first[0] >= this.width / 2
+            ) {
+                firstArea == 0
+                    ? (second[1] =
+                          Math.floor((Math.random() * this.height) / 2) +
+                          this.height / 2)
+                    : (second[1] = Math.floor(
+                          (Math.random() * this.height) / 2
+                      ));
+            }
+            second[0] = this.width - 1;
         } else {
-            second = [
-                secondArea == 1 ? 0 : this.width - 1,
-                Math.floor(Math.random() * (this.height - 2)) + 1,
-            ];
+            if (
+                (firstArea == 1 || firstArea == 2) &&
+                first[1] >= this.height / 2
+            ) {
+                firstArea == 1
+                    ? (second[0] =
+                          Math.floor((Math.random() * this.width) / 2) +
+                          this.width / 2)
+                    : (second[0] = Math.floor(
+                          (Math.random() * this.width) / 2
+                      ));
+            }
+            second[1] = this.height - 1;
         }
+
+        this.graph[first[1]][first[0]].setEnd();
+        this.graph[second[1]][second[0]].setEnd();
     }
 
     generateMaze() {
         this.initMaze();
+        this.setEnds();
         const start =
             this.graph[Math.floor(Math.random() * this.height)][
                 Math.floor(Math.random() * this.width)
