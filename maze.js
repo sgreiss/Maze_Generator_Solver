@@ -44,6 +44,7 @@ class Maze {
     init(width, height) {
         this.width = width;
         this.height = height;
+        this.graph = new MazeGraph(width, height);
         const heightSum = canvas.height / (height * 10);
         const widthSum = canvas.width / (width * 10);
         this.cellSize = [widthSum * 10, heightSum * 10];
