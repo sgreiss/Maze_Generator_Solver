@@ -29,6 +29,52 @@ class MazeGraph {
         }
     }
 
+    setEnds() {
+        const firstArea = Math.floor(Math.random() * 4); // 0: top, 1: left, 2: right, 3: bottom
+        const secondArea = Math.floor(Math.random() * 4);
+        if (secondArea == firstArea) {
+            secondArea++;
+            if (secondArea == 4) {
+                secondArea = 0;
+            }
+        }
+        let first, second; // [x, y]
+        if (firstArea == 0 || firstArea == 3) {
+            first = [
+                Math.floor(Math.random() * this.width),
+                firstArea == 0 ? 0 : this.height - 1,
+            ];
+        } else {
+            first = [
+                firstArea == 1 ? 0 : this.width - 1,
+                Math.floor(Math.random() * (this.height - 2)) + 1,
+            ];
+        }
+        if (secondArea == 0) {
+            if (
+                (firstArea == 1 || firstArea == 2) &&
+                first[1] < this.height / 2
+            ) {
+                firstArea == 1
+                    ? (second[0] =
+                          Math.floor((Math.random() * this.width) / 2) +
+                          this.width / 2)
+                    : (second[0] = Math.floor(
+                          (Math.random() * this.width) / 2
+                      ));
+            }
+            second = [
+                Math.floor(Math.random() * this.width),
+                secondArea == 0 ? 0 : this.height - 1,
+            ];
+        } else {
+            second = [
+                secondArea == 1 ? 0 : this.width - 1,
+                Math.floor(Math.random() * (this.height - 2)) + 1,
+            ];
+        }
+    }
+
     generateMaze() {
         this.initMaze();
         const start =
@@ -67,7 +113,7 @@ class MazeGraph {
                 Array.from(
                     { length: this.width },
                     (_, col) =>
-                        "." +
+                        (this.graph[row][col].isEnd ? "*" : ".") +
                         (col + 1 < this.width &&
                         this.graph[row][col].hasEdge(this.graph[row][col + 1])
                             ? "--"
@@ -105,6 +151,7 @@ class MazeNode {
     constructor(x, y) {
         this.x = x;
         this.y = y;
+        this.isEnd = false;
         this.edges = new Array();
         this.neighbors = new Array();
     }
@@ -112,6 +159,10 @@ class MazeNode {
     setPosition(x, y) {
         this.x = x;
         this.y = y;
+    }
+
+    setEnd() {
+        this.isEnd = true;
     }
 
     addEdge(node) {

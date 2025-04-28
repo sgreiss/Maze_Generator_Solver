@@ -14,7 +14,9 @@ function generateMaze() {
     maze.generate();
 }
 
-function solveMaze() {}
+function solveMaze() {
+    alert("Maze solving is not implemented yet.");
+}
 
 function showSettings() {
     const settings = document.getElementById("settings");
