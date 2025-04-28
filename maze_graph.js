@@ -3,22 +3,22 @@ class MazeGraph {
         this.width = width;
         this.height = height;
         this.graph = Array.from({ length: height }, () =>
-            Array.from({ length: width }, () => new Maze_Node(0, 0))
+            Array.from({ length: width }, () => new MazeNode(0, 0))
         );
-        for (let y = 0; y < this.height; y++) {
-            for (let x = 0; x < this.width; x++) {
-                this.graph[x][y].setPosition(x, y);
-                if (x > 0) {
-                    this.graph[x][y].addNeighbor(this.graph[x - 1][y]);
+        for (let row = 0; row < this.height; row++) {
+            for (let col = 0; col < this.width; col++) {
+                this.graph[row][col].setPosition(col, row);
+                if (col > 0) {
+                    this.graph[row][col].addNeighbor(this.graph[row][col - 1]);
                 }
-                if (x < this.width - 1) {
-                    this.graph[x][y].addNeighbor(this.graph[x + 1][y]);
+                if (col < this.width - 1) {
+                    this.graph[row][col].addNeighbor(this.graph[row][col + 1]);
                 }
-                if (y > 0) {
-                    this.graph[x][y].addNeighbor(this.graph[x][y - 1]);
+                if (row > 0) {
+                    this.graph[row][col].addNeighbor(this.graph[row - 1][col]);
                 }
-                if (y < this.height - 1) {
-                    this.graph[x][y].addNeighbor(this.graph[x][y + 1]);
+                if (row < this.height - 1) {
+                    this.graph[row][col].addNeighbor(this.graph[row + 1][col]);
                 }
             }
         }
@@ -37,7 +37,33 @@ class MazeGraph {
 
     toGraphString() {
         let str =
-            "\t" + Array.from({ length: width }, (_, x) => x).join(" ") + "\n";
+            "\t" + Array.from({ length: this.width }, (_, x) => x).join("  ") + "\n"; // 0  1  2  3  ...
+        str += Array.from(
+            { length: this.height },
+            (_, row) =>
+                row +
+                "   " +
+                Array.from(
+                    { length: this.width },
+                    (_, col) =>
+                        "." +
+                        (col + 1 < this.width &&
+                        this.graph[row][col].hasEdge(this.graph[row][col + 1])
+                            ? "--"
+                            : "  ")
+                ).join("") +
+                "\n\t" +
+                Array.from(
+                    { length: this.width },
+                    (_, col) =>
+                        (row + 1 < this.height &&
+                        this.graph[row][col].hasEdge(this.graph[row + 1][col])
+                            ? "|"
+                            : " ") + "  "
+                ).join("")
+        ).join("\n");
+
+        return str + "\n";
     }
 
     toPTString() {

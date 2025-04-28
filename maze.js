@@ -67,9 +67,11 @@ class Maze {
     draw() {}
 }
 
-const maze = new Maze(25, 20);
+const maze = new Maze(10, 8);
 
-const graph = new MazeGraph(25, 20);
+const graph = new MazeGraph(10, 8);
+console.log(graph.toPTString());
+console.log(graph.toGraphString());
 
 /*
 ctx.strokeStyle = "#50dc5a";
