@@ -28,9 +28,9 @@ function showSettings() {
 }
 
 function applySettings() {
-    const cellSize = parseInt(document.getElementById("cellSize").value);
+    const cellCount = parseInt(document.getElementById("cellCount").value);
     const width = cellSize;
-    const height = Math.ceil(cellSize / WIDTH_HEIGHT_RATIO);
+    const height = Math.ceil(cellCount / WIDTH_HEIGHT_RATIO);
     initMaze(width, height);
 }
 
