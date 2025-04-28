@@ -9,7 +9,7 @@ function initMaze(width, height) {
 }
 
 function generateMaze() {
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "white";
     maze.generate();
 }
@@ -36,17 +36,18 @@ class Maze {
     constructor(width, height) {
         this.width = width;
         this.height = height;
-        this.paths = this.cellSize = [0, 0]; // [width, height]
+        this.graph = new MazeGraph(width, height);
+        this.cellSize = [0, 0]; // [width, height]
         this.init(width, height);
     }
 
     init(width, height) {
         this.width = width;
         this.height = height;
-        const height_sum = canvas.height / (height * 10);
-        const width_sum = canvas.width / (width * 10);
-        this.cellSize = [width_sum, height_sum];
-        for (let y = 0; y < canvas.height; y += height_sum) {
+        const heightSum = canvas.height / (height * 10);
+        const widthSum = canvas.width / (width * 10);
+        this.cellSize = [widthSum * 10, heightSum * 10];
+        for (let y = 0; y < canvas.height; y += heightSum) {
             ctx.strokeStyle = "#222";
             ctx.beginPath();
             ctx.moveTo(0, y * 10);
@@ -54,24 +55,57 @@ class Maze {
             ctx.stroke();
         }
 
-        for (let x = 0; x < canvas.width; x += width_sum) {
+        for (let x = 0; x < canvas.width; x += widthSum) {
             ctx.strokeStyle = "#222";
             ctx.beginPath();
             ctx.moveTo(x * 10, 0);
             ctx.lineTo(x * 10, canvas.height * 10);
             ctx.stroke();
         }
+        console.log(this.cellSize);
     }
 
-    generate() {}
+    generate() {
+        this.graph.generateMaze();
+        console.log(this.graph.toGraphString());
+
+        ctx.strokeStyle = "#222";
+        for (let row = 0; row < this.height; row++) {
+            for (let col = 0; col < this.width; col++) {
+                const node = this.graph.graph[row][col];
+                for (const neighbor of node.neighbors) {
+                    if (!node.hasEdge(neighbor)) {
+                        ctx.beginPath();
+                        if (node.x < neighbor.x) {
+                            ctx.moveTo(
+                                col * this.cellSize[0] + this.cellSize[0],
+                                row * this.cellSize[1]
+                            );
+                            ctx.lineTo(
+                                col * this.cellSize[0] + this.cellSize[0],
+                                row * this.cellSize[1] + this.cellSize[1]
+                            );
+                            ctx.stroke();
+                        } else if (node.y < neighbor.y) {
+                            ctx.moveTo(
+                                col * this.cellSize[0],
+                                row * this.cellSize[1] + this.cellSize[1]
+                            );
+                            ctx.lineTo(
+                                col * this.cellSize[0] + this.cellSize[0],
+                                row * this.cellSize[1] + this.cellSize[1]
+                            );
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+        }
+    }
     draw() {}
 }
 
 const maze = new Maze(10, 8);
-
-const graph = new MazeGraph(10, 8);
-graph.generateMaze();
-console.log(graph.toGraphString());
 
 /*
 ctx.strokeStyle = "#50dc5a";

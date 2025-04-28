@@ -2,8 +2,13 @@ class MazeGraph {
     constructor(width, height) {
         this.width = width;
         this.height = height;
-        this.graph = Array.from({ length: height }, () =>
-            Array.from({ length: width }, () => new MazeNode(0, 0))
+        this.graph;
+        this.initMaze();
+    }
+
+    initMaze() {
+        this.graph = Array.from({ length: this.height }, () =>
+            Array.from({ length: this.width }, () => new MazeNode(0, 0))
         );
         for (let row = 0; row < this.height; row++) {
             for (let col = 0; col < this.width; col++) {
@@ -25,6 +30,7 @@ class MazeGraph {
     }
 
     generateMaze() {
+        this.initMaze();
         const start =
             this.graph[Math.floor(Math.random() * this.height)][
                 Math.floor(Math.random() * this.width)
@@ -38,7 +44,8 @@ class MazeGraph {
             );
             if (neighbors.length > 0) {
                 stack.push(current);
-                const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+                const next =
+                    neighbors[Math.floor(Math.random() * neighbors.length)];
                 current.addEdge(next);
                 next.addEdge(current);
                 visited.add(next);
@@ -123,9 +130,9 @@ class MazeNode {
         return this.edges;
     }
 
-    hasNoEdges() {
-        return this.edges.length === 0;
-    }
+    // hasNoEdges() {
+    //     return this.edges.length === 0;
+    // }
 
     toString() {
         return `(${this.x}, ${this.y})`;
