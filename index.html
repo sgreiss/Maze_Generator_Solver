@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="style.css" />
     <title>Maze Generator & Solver</title>
   </head>
+
   <body>
     <h1>Maze Generator & Solver</h1>
 
@@ -19,12 +20,19 @@
 
       <div class="settings" id="settings" style="display: none">
         <label for="cellSize">Cell Size:</label>
-        <input type="range" id="cellSize" value="25" min="10" max="50" class="slider"/><br />
+        <input
+          type="range"
+          id="cellSize"
+          value="25"
+          min="10"
+          max="50"
+          class="slider"
+        /><br />
 
-        <button onclick="applySettings()">Apply</button>
+        <button style="border: none" onclick="applySettings()">Apply</button>
       </div>
     </div>
 
-    <script src="maze.js"></script>
+    <script type="module" src="maze.js"></script>
   </body>
 </html>
