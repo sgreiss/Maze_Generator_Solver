@@ -96,18 +96,18 @@ class Maze {
             }
         } else {
             if (this.tracingPath) {
-                while (this.tracingPath) {
-                    this.drawMaze();
-                    ctx.strokeStyle = "#50dc5a";
-                    ctx.lineWidth = 3;
-                    ctx.beginPath();
-                    ctx.moveTo(
-                        node.x * this.cellSize[0] + this.cellSize[0] / 2,
-                        node.y * this.cellSize[1] + this.cellSize[1] / 2
-                    );
-                    ctx.lineTo(x, y);
-                    ctx.stroke();
-                }
+                // while (this.tracingPath) {
+                //     this.drawMaze();
+                //     ctx.strokeStyle = "#50dc5a";
+                //     ctx.lineWidth = 3;
+                //     ctx.beginPath();
+                //     ctx.moveTo(
+                //         node.x * this.cellSize[0] + this.cellSize[0] / 2,
+                //         node.y * this.cellSize[1] + this.cellSize[1] / 2
+                //     );
+                //     ctx.lineTo(x, y);
+                //     ctx.stroke();
+                // }
             } else {
                 this.tracingPath = false;
             }

@@ -30,86 +30,8 @@ class MazeGraph {
     }
 
     setEnds() {
-        const firstArea = Math.floor(Math.random() * 4); // 0: top, 1: left, 2: right, 3: bottom
-        let secondArea = Math.floor(Math.random() * 4);
-        if (secondArea == firstArea) {
-            secondArea++;
-            if (secondArea == 4) {
-                secondArea = 0;
-            }
-        }
-        let first = [0, 0], second = [0, 0]; // [x, y]
-        if (firstArea == 0 || firstArea == 3) {
-            first = [
-                Math.floor(Math.random() * this.width),
-                firstArea == 0 ? 0 : this.height - 1,
-            ];
-        } else {
-            first = [
-                firstArea == 1 ? 0 : this.width - 1,
-                Math.floor(Math.random() * (this.height - 2)) + 1,
-            ];
-        }
-        if (secondArea == 0) {
-            if (
-                (firstArea == 1 || firstArea == 2) &&
-                first[1] < this.height / 2
-            ) {
-                firstArea == 1
-                    ? (second[0] =
-                          Math.floor((Math.random() * this.width) / 2) +
-                          this.width / 2)
-                    : (second[0] = Math.floor(
-                          (Math.random() * this.width) / 2
-                      ));
-            }
-            second[1] = 0;
-        } else if (secondArea == 1) {
-            if (
-                (firstArea == 0 || firstArea == 3) &&
-                first[0] < this.width / 2
-            ) {
-                firstArea == 0
-                    ? (second[1] =
-                          Math.floor((Math.random() * this.height) / 2) +
-                          this.height / 2)
-                    : (second[1] = Math.floor(
-                          (Math.random() * this.height) / 2
-                      ));
-            }
-            second[0] = 0;
-        } else if (secondArea == 2) {
-            if (
-                (firstArea == 0 || firstArea == 3) &&
-                first[0] >= this.width / 2
-            ) {
-                firstArea == 0
-                    ? (second[1] =
-                          Math.floor((Math.random() * this.height) / 2) +
-                          this.height / 2)
-                    : (second[1] = Math.floor(
-                          (Math.random() * this.height) / 2
-                      ));
-            }
-            second[0] = this.width - 1;
-        } else {
-            if (
-                (firstArea == 1 || firstArea == 2) &&
-                first[1] >= this.height / 2
-            ) {
-                firstArea == 1
-                    ? (second[0] =
-                          Math.floor((Math.random() * this.width) / 2) +
-                          this.width / 2)
-                    : (second[0] = Math.floor(
-                          (Math.random() * this.width) / 2
-                      ));
-            }
-            second[1] = this.height - 1;
-        }
-
-        this.graph[first[1]][first[0]].setEnd();
-        this.graph[second[1]][second[0]].setEnd();
+        this.graph[0][0].setEnd();
+        this.graph[this.height - 1][this.width - 1].setEnd();
     }
 
     generateMaze() {
