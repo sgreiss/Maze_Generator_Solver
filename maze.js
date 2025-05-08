@@ -8,6 +8,12 @@ function resizeCanvas() {
 
 const WIDTH_HEIGHT_RATIO = 9 / 7;
 
+const EndLocations = {
+    CORNERS: 1, // generate endpoints in top-left and bottom-right corners
+    SMART_RANDOM: 2, // generate endpoints in random locations, but not too close to each other and on the edge of the maze only
+    TRUE_RANDOM: 3, // generate endpoints in random locations, no restrictions
+};
+
 function initMaze(width, height) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     maze.init(width, height);
@@ -34,9 +40,23 @@ function showSettings() {
 
 function applySettings() {
     const cellCount = parseInt(document.getElementById("cellCount").value);
+    let endLocations = parseInt(document.getElementById("endLocations").value);
+    switch (endLocations) {
+        case 1:
+            endLocations = EndLocations.CORNERS;
+            break;
+        case 2:
+            endLocations = EndLocations.SMART_RANDOM;
+            break;
+        case 3:
+            endLocations = EndLocations.TRUE_RANDOM;
+            break;
+        default:
+            endLocations = EndLocations.CORNERS;
+    }
     const width = cellCount;
     const height = Math.ceil(cellCount / WIDTH_HEIGHT_RATIO);
-    initMaze(width, height);
+    initMaze(width, height, endLocations);
 }
 
 class Maze {
@@ -47,10 +67,12 @@ class Maze {
         this.path = [];
         this.tracingPath = false;
         this.cellSize = [0, 0]; // [width, height]
+        this.endLocations = [EndLocations.CORNERS, [0, 0], [0, 0]]; // [type, [start], [end]]
         this.init(width, height);
     }
 
-    init(width, height) {
+    init(width, height, endLocations) {
+        this.endLocations = endLocations;
         this.width = width;
         this.height = height;
         this.graph = new MazeGraph(width, height);
@@ -76,7 +98,7 @@ class Maze {
     }
 
     generate() {
-        this.graph.generateMaze();
+        endLocations = this.graph.generateMaze(endLocations[0]);
         console.log(this.graph.toGraphString());
 
         this.drawMaze();

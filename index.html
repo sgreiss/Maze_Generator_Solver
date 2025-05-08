@@ -13,6 +13,7 @@
             <button onclick="generateMaze()">Generate Maze</button>
             <button onclick="solveMaze()">Solve Maze</button>
             <button onclick="showSettings()">Settings</button>
+            <button onclick="alert('Help button not implemented yet')">Help</button>
         </div>
 
         <div class="root">
@@ -26,6 +27,16 @@
                     value="10"
                     min="10"
                     max="50"
+                    class="slider"
+                /><br />
+                <label for="endLocations">Endpoint Locations:</label>
+                <input
+                    type="range"
+                    id="endLocations"
+                    value="1"
+                    min="1"
+                    max="3"
+                    step="1"
                     class="slider"
                 /><br />
 

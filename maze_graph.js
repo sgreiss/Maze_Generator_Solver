@@ -29,14 +29,54 @@ class MazeGraph {
         }
     }
 
-    setEnds() {
-        this.graph[0][0].setEnd();
-        this.graph[this.height - 1][this.width - 1].setEnd();
+    setEnds(endLocations) {
+        let returnLocations;
+        switch (endLocations) {
+            case EndLocations.CORNERS:
+                this.graph[0][0].setEnd();
+                this.graph[this.height - 1][this.width - 1].setEnd();
+                returnLocations = [
+                    endLocations,
+                    [0, 0],
+                    [this.height - 1, this.width - 1],
+                ];
+                break;
+            case EndLocations.SMART_RANDOM:
+                
+            case EndLocations.TRUE_RANDOM:
+                const randomCoord1 = [
+                    Math.floor(Math.random() * this.height),
+                    Math.floor(Math.random() * this.width),
+                ];
+                let randomCoord2;
+                while (randomCoord2 === randomCoord1) {
+                    randomCoord2 = [
+                        Math.floor(Math.random() * this.height),
+                        Math.floor(Math.random() * this.width),
+                    ];
+                }
+                this.graph[randomCoord1[0]][randomCoord1[1]].setEnd();
+                this.graph[randomCoord2[0]][randomCoord2[1]].setEnd();
+                returnLocations = [
+                    endLocations,
+                    randomCoord1,
+                    randomCoord2,
+                ];
+                break;
+            default:
+                this.graph[0][0].setEnd();
+                this.graph[this.height - 1][this.width - 1].setEnd();
+                returnLocations = [
+                    endLocations,
+                    [0, 0],
+                    [this.height - 1, this.width - 1],
+                ];
+        }
     }
 
-    generateMaze() {
+    generateMaze(endLocations) {
         this.initMaze();
-        this.setEnds();
+        const returnLocations = this.setEnds(endLocations);
         const start =
             this.graph[Math.floor(Math.random() * this.height)][
                 Math.floor(Math.random() * this.width)
@@ -58,6 +98,8 @@ class MazeGraph {
                 stack.push(next);
             }
         }
+
+        return returnLocations;
     }
 
     toGraphString() {
