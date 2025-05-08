@@ -48,3 +48,7 @@ button:hover {
   border: 2px solid #eee;
   border-radius: 8px;
 }
+
+#endLocationsLabel {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}

@@ -59,6 +59,24 @@ function applySettings() {
     initMaze(width, height, endLocations);
 }
 
+function updateEndLocationsLabel() {
+    const endLocations = parseInt(document.getElementById("endLocations").value);
+    const label = document.getElementById("endLocationsLabel");
+    switch (endLocations) {
+        case EndLocations.CORNERS:
+            label.innerText = "Corners";
+            break;
+        case EndLocations.SMART_RANDOM:
+            label.innerText = "Smart Random";
+            break;
+        case EndLocations.TRUE_RANDOM:
+            label.innerText = "True Random";
+            break;
+        default:
+            label.innerText = "Corners";
+    }
+}
+
 class Maze {
     constructor(width, height) {
         this.width = width;
@@ -68,7 +86,7 @@ class Maze {
         this.tracingPath = false;
         this.cellSize = [0, 0]; // [width, height]
         this.endLocations = [EndLocations.CORNERS, [0, 0], [0, 0]]; // [type, [start], [end]]
-        this.init(width, height);
+        this.init(width, height, this.endLocations);
     }
 
     init(width, height, endLocations) {
@@ -98,7 +116,7 @@ class Maze {
     }
 
     generate() {
-        endLocations = this.graph.generateMaze(endLocations[0]);
+        this.endLocations = this.graph.generateMaze(endLocations[0]);
         console.log(this.graph.toGraphString());
 
         this.drawMaze();
