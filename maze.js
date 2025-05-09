@@ -14,9 +14,9 @@ const EndLocations = {
     TRUE_RANDOM: 3, // generate endpoints in random locations, no restrictions
 };
 
-function initMaze(width, height) {
+function initMaze(width, height, endLocations) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    maze.init(width, height);
+    maze.init(width, height, endLocations);
 }
 
 function generateMaze() {
@@ -60,7 +60,9 @@ function applySettings() {
 }
 
 function updateEndLocationsLabel() {
-    const endLocations = parseInt(document.getElementById("endLocations").value);
+    const endLocations = parseInt(
+        document.getElementById("endLocations").value
+    );
     const label = document.getElementById("endLocationsLabel");
     switch (endLocations) {
         case EndLocations.CORNERS:
@@ -90,7 +92,7 @@ class Maze {
     }
 
     init(width, height, endLocations) {
-        this.endLocations = endLocations;
+        this.endLocations = [endLocations, [0, 0], [0, 0]];
         this.width = width;
         this.height = height;
         this.graph = new MazeGraph(width, height);
@@ -116,8 +118,9 @@ class Maze {
     }
 
     generate() {
-        this.endLocations = this.graph.generateMaze(endLocations[0]);
-        console.log(this.graph.toGraphString());
+        this.endLocations = this.graph.generateMaze(this.endLocations[0]);
+        console.log("endLocations", this.endLocations);
+        //console.log(this.graph.toGraphString());
 
         this.drawMaze();
     }

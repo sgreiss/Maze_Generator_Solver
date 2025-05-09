@@ -42,14 +42,17 @@ class MazeGraph {
                 ];
                 break;
             case EndLocations.SMART_RANDOM:
-                
+
             case EndLocations.TRUE_RANDOM:
                 const randomCoord1 = [
                     Math.floor(Math.random() * this.height),
                     Math.floor(Math.random() * this.width),
                 ];
-                let randomCoord2;
-                while (randomCoord2 === randomCoord1) {
+                let randomCoord2 = [
+                    Math.floor(Math.random() * this.height),
+                    Math.floor(Math.random() * this.width),
+                ];
+                while (randomCoord1.every((val, index) => val === randomCoord2[index])) {
                     randomCoord2 = [
                         Math.floor(Math.random() * this.height),
                         Math.floor(Math.random() * this.width),
@@ -57,11 +60,7 @@ class MazeGraph {
                 }
                 this.graph[randomCoord1[0]][randomCoord1[1]].setEnd();
                 this.graph[randomCoord2[0]][randomCoord2[1]].setEnd();
-                returnLocations = [
-                    endLocations,
-                    randomCoord1,
-                    randomCoord2,
-                ];
+                returnLocations = [endLocations, randomCoord1, randomCoord2];
                 break;
             default:
                 this.graph[0][0].setEnd();
@@ -72,6 +71,7 @@ class MazeGraph {
                     [this.height - 1, this.width - 1],
                 ];
         }
+        return returnLocations;
     }
 
     generateMaze(endLocations) {
