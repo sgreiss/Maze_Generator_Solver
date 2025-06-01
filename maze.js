@@ -125,9 +125,14 @@ class Maze {
         this.drawMaze();
     }
 
-    clicked(x, y) {
+    clicked(x, y, event) {
         const cellX = Math.floor(x / this.cellSize[0]);
         const cellY = Math.floor(y / this.cellSize[1]);
+        if (event == "mousedown") {
+            console.log("Mouse down at cell:", cellX, cellY);
+        } else if (event == "mouseup") {
+            console.log("Mouse released at cell:", cellX, cellY);
+        }
         const node = this.graph.graph[cellY][cellX];
         if (node.isEnd) {
             if (this.path.length == 0) {
@@ -214,12 +219,42 @@ class Maze {
     }
 }
 
+//TODO:
 // resizeCanvas();
 // window.addEventListener("resize", resizeCanvas);
 
 const maze = new Maze(10, 8);
-$("#mazeCanvas").click(function (event) {
-    maze.clicked(event.offsetX, event.offsetY);
+
+var dragging = false;
+var dragStart = [0, 0];
+var dragEnd = [0, 0];
+canvas.addEventListener("mousedown", function (event) {
+    dragging = true;
+    dragStart[0] = event.offsetX;
+    dragStart[1] = event.offsetY;
+    maze.clicked(dragStart[0], dragStart[1], event.type);
+});
+canvas.addEventListener("mousemove", function (event) {
+    if (dragging) {
+        dragEnd[0] = event.offsetX;
+        dragEnd[1] = event.offsetY;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        maze.drawMaze();
+        ctx.strokeStyle = "#50dc5a";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(dragStart[0], dragStart[1]);
+        ctx.lineTo(dragEnd[0], dragEnd[1]);
+        ctx.stroke();
+    }
+});
+canvas.addEventListener("mouseup", function (event) {
+    dragging = false;
+    dragEnd[0] = event.offsetX;
+    dragEnd[1] = event.offsetY;
+    maze.clicked(dragEnd[0], dragEnd[1], event.type);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    maze.drawMaze();
 });
 /*
 ctx.strokeStyle = "#50dc5a";
