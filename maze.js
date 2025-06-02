@@ -125,39 +125,37 @@ class Maze {
         this.drawMaze();
     }
 
-    clicked(x, y, event) {
-        const cellX = Math.floor(x / this.cellSize[0]);
-        const cellY = Math.floor(y / this.cellSize[1]);
-        if (event == "mousedown") {
-            console.log("Mouse down at cell:", cellX, cellY);
-        } else if (event == "mouseup") {
-            console.log("Mouse released at cell:", cellX, cellY);
-        }
-        const node = this.graph.graph[cellY][cellX];
-        if (node.isEnd) {
-            if (this.path.length == 0) {
-                if (this.tracingPath) {
-                    this.tracingPath = false;
-                } else {
-                    this.tracingPath = true;
-                }
-            }
+    interact(dragStart, dragEnd, event) {
+        const startCell = [Math.floor(dragStart[1] / this.cellSize[1]), Math.floor(dragStart[0] / this.cellSize[0])];
+        const endCell = [Math.floor(dragEnd[1] / this.cellSize[1]), Math.floor(dragEnd[0] / this.cellSize[0])];
+        const startNode = this.graph.graph[startCell[0]][startCell[1]];
+        const endNode = this.graph.graph[endCell[0]][endCell[1]];
+
+        if ((startNode.isEnd || startNode.isPath) && event === "mousedown") {
+            console.log("Clicked on end cell:", startCell);
+            this.tracingPath = true;
         } else {
-            if (this.tracingPath) {
-                // while (this.tracingPath) {
-                //     this.drawMaze();
-                //     ctx.strokeStyle = "#50dc5a";
-                //     ctx.lineWidth = 3;
-                //     ctx.beginPath();
-                //     ctx.moveTo(
-                //         node.x * this.cellSize[0] + this.cellSize[0] / 2,
-                //         node.y * this.cellSize[1] + this.cellSize[1] / 2
-                //     );
-                //     ctx.lineTo(x, y);
-                //     ctx.stroke();
-                // }
-            } else {
+            if (event === "mousemove" && this.tracingPath) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                this.drawMaze();
+                ctx.strokeStyle = "#50dc5a";
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(
+                    startCell[1] * this.cellSize[0] + this.cellSize[0] / 2,
+                    startCell[0] * this.cellSize[1] + this.cellSize[1] / 2
+                );
+                ctx.lineTo(
+                    endCell[1] * this.cellSize[0] + this.cellSize[0] / 2,
+                    endCell[0] * this.cellSize[1] + this.cellSize[1] / 2
+                );
+                ctx.stroke();
+                this.path.push([startCell, endCell]);
+                endNode.isPath = true;
+            } else if (event === "mouseup") {
                 this.tracingPath = false;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                this.drawMaze();
             }
         }
     }
@@ -216,6 +214,41 @@ class Maze {
                 }
             }
         }
+
+        for (const [start, end] of this.path) {
+            ctx.strokeStyle = "#50dc5a";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(
+                start[1] * this.cellSize[0] + this.cellSize[0] / 2,
+                start[0] * this.cellSize[1] + this.cellSize[1] / 2
+            );
+            ctx.lineTo(
+                end[1] * this.cellSize[0] + this.cellSize[0] / 2,
+                end[0] * this.cellSize[1] + this.cellSize[1] / 2
+            );
+            ctx.stroke();
+            
+            if (!this.graph.graph[end[0]][end[1]].isEnd) {
+                ctx.fillStyle = "#50dc5a";
+                ctx.fillRect(
+                    end[1] * this.cellSize[0] + this.cellSize[0] * 0.375,
+                    end[0] * this.cellSize[1] + this.cellSize[1] * 0.375,
+                    this.cellSize[0] * 0.25,
+                    this.cellSize[1] * 0.25
+                );
+                ctx.strokeStyle = "#41b446";
+                ctx.lineWidth = 2;
+                ctx.strokeRect(
+                    end[1] * this.cellSize[0] + this.cellSize[0] * 0.375,
+                    end[0] * this.cellSize[1] + this.cellSize[1] * 0.375,
+                    this.cellSize[0] * 0.25,
+                    this.cellSize[1] * 0.25
+                );
+                ctx.strokeStyle = "#222";
+                ctx.lineWidth = 1;
+            }
+        }
     }
 }
 
@@ -228,33 +261,39 @@ const maze = new Maze(10, 8);
 var dragging = false;
 var dragStart = [0, 0];
 var dragEnd = [0, 0];
+var mousein = true;
+
+canvas.addEventListener("mouseenter", function (event) {
+    mousein = true;
+});
+canvas.addEventListener("mouseleave", function (event) {
+    mousein = false;
+});
+
 canvas.addEventListener("mousedown", function (event) {
+    if (!mousein) return;
     dragging = true;
     dragStart[0] = event.offsetX;
     dragStart[1] = event.offsetY;
-    maze.clicked(dragStart[0], dragStart[1], event.type);
+    maze.interact(dragStart, dragEnd, event.type);
 });
 canvas.addEventListener("mousemove", function (event) {
+    if (!mousein) return;
     if (dragging) {
         dragEnd[0] = event.offsetX;
         dragEnd[1] = event.offsetY;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        maze.drawMaze();
-        ctx.strokeStyle = "#50dc5a";
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(dragStart[0], dragStart[1]);
-        ctx.lineTo(dragEnd[0], dragEnd[1]);
-        ctx.stroke();
+        maze.interact(dragStart, dragEnd, event.type);
+        // if (maze.path[maze.path.length - 1][1] == Math.floor(dragEnd[0] / maze.cellSize[0])) {
+        //     dragStart = dragEnd.slice(); // Update dragStart to the current dragEnd position
+        // }
     }
 });
 canvas.addEventListener("mouseup", function (event) {
+    if (!mousein) return;
     dragging = false;
     dragEnd[0] = event.offsetX;
     dragEnd[1] = event.offsetY;
-    maze.clicked(dragEnd[0], dragEnd[1], event.type);
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    maze.drawMaze();
+    maze.interact(dragStart, dragEnd, event.type);
 });
 /*
 ctx.strokeStyle = "#50dc5a";

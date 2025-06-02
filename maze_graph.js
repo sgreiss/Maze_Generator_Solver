@@ -41,7 +41,7 @@ class MazeGraph {
                     [this.height - 1, this.width - 1],
                 ];
                 break;
-            case EndLocations.SMART_RANDOM:
+            case EndLocations.SMART_RANDOM: //TODO
 
             case EndLocations.TRUE_RANDOM:
                 const randomCoord1 = [
@@ -154,6 +154,7 @@ class MazeNode {
         this.x = x;
         this.y = y;
         this.isEnd = false;
+        this.isPath = false;
         this.edges = new Array();
         this.neighbors = new Array();
     }
@@ -165,6 +166,10 @@ class MazeNode {
 
     setEnd() {
         this.isEnd = true;
+    }
+
+    setPath() {
+        this.isPath = true;
     }
 
     addEdge(node) {
