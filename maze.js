@@ -119,7 +119,8 @@ class Maze {
 
     generate() {
         this.endLocations = this.graph.generateMaze(this.endLocations[0]);
-        this.path = [];
+        this.path = [[this.endLocations[1], this.endLocations[1]]];
+        this.graph.graph[this.endLocations[1][0]][this.endLocations[1][1]].isPath = true;
         console.log("endLocations", this.endLocations);
         //console.log(this.graph.toGraphString());
 
@@ -127,16 +128,25 @@ class Maze {
     }
 
     interact(dragStart, dragEnd, event) {
-        const startCell = [Math.floor(dragStart[1] / this.cellSize[1]), Math.floor(dragStart[0] / this.cellSize[0])];
-        const endCell = [Math.floor(dragEnd[1] / this.cellSize[1]), Math.floor(dragEnd[0] / this.cellSize[0])];
+        const startCell = [
+            Math.floor(dragStart[1] / this.cellSize[1]),
+            Math.floor(dragStart[0] / this.cellSize[0]),
+        ];
+        const endCell = [
+            Math.floor(dragEnd[1] / this.cellSize[1]),
+            Math.floor(dragEnd[0] / this.cellSize[0]),
+        ];
         const startNode = this.graph.graph[startCell[0]][startCell[1]];
         const endNode = this.graph.graph[endCell[0]][endCell[1]];
 
-        if ((startNode.isEnd || startNode.isPath) && event === "mousedown") {
+        if ((startNode.isStart || startNode.isPath) && event === "mousedown") {
             console.log("Clicked on end cell:", startCell);
             this.tracingPath = true;
-        } else {
-            if (event === "mousemove" && this.tracingPath) {
+        } else if (event === "mousemove" && this.tracingPath) {
+            if (startNode !== endNode && !startNode.hasEdge(endNode)) {
+                console.log("No edge between nodes:", startCell, endCell);
+                this.tracingPath = false;
+            } else {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 this.drawMaze();
                 ctx.strokeStyle = "#50dc5a";
@@ -151,15 +161,16 @@ class Maze {
                     endCell[0] * this.cellSize[1] + this.cellSize[1] / 2
                 );
                 ctx.stroke();
-                if (endNode.isPath != true) {
+                if (startNode !== endNode && !endNode.isPath) {
                     this.path.push([startCell, endCell]);
                     endNode.isPath = true;
                 }
-            } else if (event === "mouseup") {
-                this.tracingPath = false;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                this.drawMaze();
             }
+        } else if (event === "mouseup") {
+            this.tracingPath = false;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            this.drawMaze();
+            console.log(this.path);
         }
     }
 
@@ -169,7 +180,7 @@ class Maze {
 
         for (let row = 0; row < this.height; row++) {
             for (let col = 0; col < this.width; col++) {
-                if (this.graph.graph[row][col].isEnd) {
+                if (this.graph.graph[row][col].isStart) {
                     ctx.fillStyle = "#50dc5a";
                     ctx.fillRect(
                         col * this.cellSize[0] + this.cellSize[0] * 0.25,
@@ -178,6 +189,25 @@ class Maze {
                         this.cellSize[1] * 0.5
                     );
                     ctx.strokeStyle = "#41b446";
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(
+                        col * this.cellSize[0] + this.cellSize[0] * 0.25,
+                        row * this.cellSize[1] + this.cellSize[1] * 0.25,
+                        this.cellSize[0] * 0.5,
+                        this.cellSize[1] * 0.5
+                    );
+                    ctx.strokeStyle = "#222";
+                    ctx.lineWidth = 1;
+                }
+                if (this.graph.graph[row][col].isEnd) {
+                    ctx.fillStyle = "#e2e835";
+                    ctx.fillRect(
+                        col * this.cellSize[0] + this.cellSize[0] * 0.25,
+                        row * this.cellSize[1] + this.cellSize[1] * 0.25,
+                        this.cellSize[0] * 0.5,
+                        this.cellSize[1] * 0.5
+                    );
+                    ctx.strokeStyle = "#c5c942";
                     ctx.lineWidth = 3;
                     ctx.strokeRect(
                         col * this.cellSize[0] + this.cellSize[0] * 0.25,
@@ -231,8 +261,8 @@ class Maze {
                 end[0] * this.cellSize[1] + this.cellSize[1] / 2
             );
             ctx.stroke();
-            
-            if (!this.graph.graph[end[0]][end[1]].isEnd) {
+
+            if (!this.graph.graph[end[0]][end[1]].isStart) {
                 ctx.fillStyle = "#50dc5a";
                 ctx.fillRect(
                     end[1] * this.cellSize[0] + this.cellSize[0] * 0.375,
@@ -283,7 +313,11 @@ canvas.addEventListener("mousedown", function (event) {
 canvas.addEventListener("mousemove", function (event) {
     if (!mousein) return;
     if (dragging) {
-        if (maze.graph.graph[Math.floor(dragStart[1] / maze.cellSize[1])][Math.floor(dragStart[0] / maze.cellSize[0])].isPath) {
+        if (
+            maze.graph.graph[Math.floor(dragStart[1] / maze.cellSize[1])][
+                Math.floor(dragStart[0] / maze.cellSize[0])
+            ].isPath
+        ) {
             dragStart = dragEnd.slice(); // Update dragStart to the current dragEnd position
         }
         dragEnd[0] = event.offsetX;

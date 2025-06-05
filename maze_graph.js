@@ -33,7 +33,7 @@ class MazeGraph {
         let returnLocations;
         switch (endLocations) {
             case EndLocations.CORNERS:
-                this.graph[0][0].setEnd();
+                this.graph[0][0].setStart();
                 this.graph[this.height - 1][this.width - 1].setEnd();
                 returnLocations = [
                     endLocations,
@@ -58,12 +58,12 @@ class MazeGraph {
                         Math.floor(Math.random() * this.width),
                     ];
                 }
-                this.graph[randomCoord1[0]][randomCoord1[1]].setEnd();
+                this.graph[randomCoord1[0]][randomCoord1[1]].setStart();
                 this.graph[randomCoord2[0]][randomCoord2[1]].setEnd();
                 returnLocations = [endLocations, randomCoord1, randomCoord2];
                 break;
-            default:
-                this.graph[0][0].setEnd();
+            default: // default to corners
+                this.graph[0][0].setStart();
                 this.graph[this.height - 1][this.width - 1].setEnd();
                 returnLocations = [
                     endLocations,
@@ -153,6 +153,7 @@ class MazeNode {
     constructor(x, y) {
         this.x = x;
         this.y = y;
+        this.isStart = false;
         this.isEnd = false;
         this.isPath = false;
         this.edges = new Array();
@@ -162,6 +163,10 @@ class MazeNode {
     setPosition(x, y) {
         this.x = x;
         this.y = y;
+    }
+
+    setStart() {
+        this.isStart = true;
     }
 
     setEnd() {
