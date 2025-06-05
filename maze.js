@@ -119,6 +119,7 @@ class Maze {
 
     generate() {
         this.endLocations = this.graph.generateMaze(this.endLocations[0]);
+        this.path = [];
         console.log("endLocations", this.endLocations);
         //console.log(this.graph.toGraphString());
 
@@ -150,8 +151,10 @@ class Maze {
                     endCell[0] * this.cellSize[1] + this.cellSize[1] / 2
                 );
                 ctx.stroke();
-                this.path.push([startCell, endCell]);
-                endNode.isPath = true;
+                if (endNode.isPath != true) {
+                    this.path.push([startCell, endCell]);
+                    endNode.isPath = true;
+                }
             } else if (event === "mouseup") {
                 this.tracingPath = false;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -280,12 +283,12 @@ canvas.addEventListener("mousedown", function (event) {
 canvas.addEventListener("mousemove", function (event) {
     if (!mousein) return;
     if (dragging) {
+        if (maze.graph.graph[Math.floor(dragStart[1] / maze.cellSize[1])][Math.floor(dragStart[0] / maze.cellSize[0])].isPath) {
+            dragStart = dragEnd.slice(); // Update dragStart to the current dragEnd position
+        }
         dragEnd[0] = event.offsetX;
         dragEnd[1] = event.offsetY;
         maze.interact(dragStart, dragEnd, event.type);
-        // if (maze.path[maze.path.length - 1][1] == Math.floor(dragEnd[0] / maze.cellSize[0])) {
-        //     dragStart = dragEnd.slice(); // Update dragStart to the current dragEnd position
-        // }
     }
 });
 canvas.addEventListener("mouseup", function (event) {
